@@ -1,15 +1,36 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from 'next/font/local';
+import { Inter } from 'next/font/google'
 import "./globals.css";
+import Ring from "./components/ring"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+
+const inter = Inter({
+    subsets: ['latin']
+})
+
+const rodinPro = localFont({
+  src: [
+    { path: '../public/fonts/FOT-RodinProN-L.otf', weight: '300', style: 'normal' },  // Light
+    { path: '../public/fonts/FOT-RodinProN-M.otf', weight: '400', style: 'normal' },  // Medium
+    { path: '../public/fonts/FOT-RodinProN-DB.otf', weight: '500', style: 'normal' }, // DemiBold
+    { path: '../public/fonts/FOT-RodinProN-B.otf', weight: '600', style: 'normal' },  // Bold
+    { path: '../public/fonts/FOT-RodinProN-EB.otf', weight: '700', style: 'normal' }, // ExtraBold
+    { path: '../public/fonts/FOT-RodinProN-UB.otf', weight: '800', style: 'normal' }, // UltraBold
+  ],
+  variable: '--font-rodin-pro',
+  display: 'swap',
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const rodin = localFont({
+  src: [
+    { path: '../public/fonts/Rodin-Regular.ttf', weight: '400', style: 'normal' },
+    { path: '../public/fonts/Rodin-Bold.ttf', weight: '700', style: 'normal' },
+    { path: '../public/fonts/Rodin-Italic.ttf', weight: '400', style: 'italic' },
+    { path: '../public/fonts/Rodin-BoldItalic.ttf', weight: '700', style: 'italic' },
+  ],
+  variable: '--font-rodin',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -22,12 +43,31 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
+  return ( 
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.className} ${rodinPro.className} antialiased `}
       >
+      <header className={`fixed  w-full top-10 h-1 z-10 `}>
+        <a href="/" className="absolute left-20 top-0">
+          //
+        </a>
+        <h1 className="absolute right-20 top-0">
+          Taylor Frank // Web Contractor
+        </h1>
+      </header>
+      
+      <main>
+        <Ring />
         {children}
+      </main>
+      <footer className="text-left absolute bottom-0  pb-20 ">
+        <div>
+          <p className="font-rodin-pro text-tiny w-1/2">
+            Driven by a  passion and expertise in ecommerce to craft digital experiences that combine performance and innovation.
+          </p>
+        </div>
+      </footer>
       </body>
     </html>
   );
