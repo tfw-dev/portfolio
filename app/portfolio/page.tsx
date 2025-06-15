@@ -1,13 +1,16 @@
-import Ring from "../components/ring"
-import Navigation from "../components/navigation"
-import AboutOverlay from "../components/about-overlay"
+import Navigation from "../components/navigation";
+import PortfolioOverlay from "./portfolio-overlay";
+import NavigationIndex from "../components/navigation-index"
+import { navItems } from "@/lib/navConfig";
+
 
 export default function Portfolio() {
+const handle = "portfolio"
     return (
         <div>
-            <Navigation></Navigation>
-            <Ring></Ring>
-            <AboutOverlay></AboutOverlay>
+            <Navigation navItems={navItems}></Navigation>
+            <PortfolioOverlay handle={handle}></PortfolioOverlay>
+            <NavigationIndex></NavigationIndex>
         </div>
     )
 }

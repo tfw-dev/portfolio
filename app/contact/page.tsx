@@ -1,19 +1,16 @@
-"use client"
-
 import Navigation from "../components/navigation"
-import AboutOverlay from "./about-overlay"
 import NavigationIndex from "../components/navigation-index"
+import ContactOverlay from "./contact-overlay";
 import { navItems } from "@/lib/navConfig";
-import { useRef } from "react";
 
-export default function About() {
-    const handle = "about"
-    
+
+export default function Contact() {
+    const handle = "contact"
     return (
         <div>
             <Navigation navItems={navItems}></Navigation>
-            <AboutOverlay handle={handle} ></AboutOverlay>
-            <NavigationIndex ></NavigationIndex>
+            <NavigationIndex></NavigationIndex>
+            <ContactOverlay handle={handle}></ContactOverlay>
         </div>
     )
 }

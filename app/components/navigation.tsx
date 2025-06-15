@@ -1,14 +1,21 @@
 import NavigationLink from "./navigation-links"
 
-export default function Navigation() {
+
+export default function Navigation({navItems}) {
     return (
     <div>
-        <NavigationLink label="About" handle="about" style={{ position: 'fixed', top: '144px', right: '55%' }}
-number="01"></NavigationLink>
-        <NavigationLink label="Portfolio" handle="portfolio" style={{ position: 'fixed', top: '254px', right: '30%' }}
-number="02"></NavigationLink>
-        <NavigationLink label="Contact" handle="contact" style={{ position: 'fixed', top: '733px', right: '30%' }}
-number="03"></NavigationLink>
+        {navItems.map((item) => (
+        <NavigationLink
+          key={item.handle}
+          label={item.label}
+          handle={item.handle}
+          number={item.number}
+          className={item.className}
+          dotOffsetMobile={item.dotOffsetMobile}
+          dotOffsetDesktop={item.dotOffsetDesktop}
+
+        />
+      ))}
     </div>
     )
 }
