@@ -14,7 +14,7 @@ gsap.registerPlugin(ScrollTrigger);
 function RingGeometry() {
    const meshRef = useRef<THREE.Mesh>(null);
 
-const shouldSpin = useRef(true);
+  const shouldSpin = useRef(true);
 
   // Spin on each frame
   useFrame(() => {
@@ -123,6 +123,30 @@ useEffect(() => {
   );
 }
 
+function ResponsiveCamera() {
+  const { camera } = useThree();
+
+  useEffect(() => {
+    const updateZoom = () => {
+      const width = window.innerWidth;
+      if (width >= 1024) {
+        camera.zoom = 5;
+      } else if (width >= 768) {
+        camera.zoom = 5;
+      } else {
+        camera.zoom = 3;
+      }
+      camera.updateProjectionMatrix();
+    };
+
+    updateZoom(); // initial
+    window.addEventListener("resize", updateZoom);
+    return () => window.removeEventListener("resize", updateZoom);
+  }, [camera]);
+
+  return <OrthographicCamera makeDefault position={[0, 0, 100]} />;
+}
+
 export default function Ring() {
     const pathname = usePathname(); // e.g. "/about"
   const { ringRef } = useOverlayRefs();
@@ -131,15 +155,16 @@ export default function Ring() {
     
   useEffect(() => {
     // Safe client-side calc
-    const topValue = `calc(50dvh - 150px)`;
+    const topValue = `calc(50dvh)`;
     setTop(topValue);
   }, []);
+  
 
   
   
   return (
     <div
-      className={`fixed left-1/2 -translate-x-1/2 w-[300px] h-[300px] z-0`}
+      className={`fixed left-1/2 -translate-y-1/2 -translate-x-1/2 w-[300px] h-[300px] md:w-[500px] md:h-[500px] z-0`}
       style={{ top, pointerEvents: "none" }} ref={ringRef}
     >
       
@@ -149,7 +174,7 @@ export default function Ring() {
         camera={{ zoom: 0, position: [0, 0, 50] }}
         shadows
       >
-          <OrthographicCamera makeDefault zoom={3} position={[0, 0, 100]} />
+          <ResponsiveCamera />
           <ambientLight intensity={15} />
           <spotLight intensity={1200} distance={100} angle={Math.PI / 2} penumbra={0} position={[0, 0, 45]} />
           <RingGeometry />

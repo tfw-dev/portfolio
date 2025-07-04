@@ -92,7 +92,7 @@ if (pathname == `/${handle}`) {
 
   return (
      <Link href={`/${handle}`} passHref >
-    <div ref={linkRef}  className={` -translate-y-1/2 w-auto ${isActive ? "absolute" : "fixed" } ${className} ${isActive ? 'z-[3]' : ''} -translate-y-1/2 ${!reference && isActive ? "opacity-0": ""}`} suppressHydrationWarning  >
+    <div ref={linkRef}  className={` -translate-y-1/2 w-auto ${isActive ? "absolute" : "fixed" } ${className} ${isActive ? 'z-[3]' : ''}  ${!reference && isActive ? "opacity-0": ""}`}   suppressHydrationWarning  >
       <div className={`relative flex justify-end text-right text-small font-inter  ${isActive ? '' : ''}`} >
         <div className='text-left'>
             <div className="text-muted text-tiny">{number}</div>

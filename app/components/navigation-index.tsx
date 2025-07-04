@@ -6,12 +6,12 @@ import { navItems } from '@/lib/navConfig';
 import { usePathname } from 'next/navigation';
 import { gsap } from "gsap";
 import { useRouter } from 'next/navigation';
-import { useOverlayRefs } from '@/context/RefContext';
+import { useOverlayRefs} from '@/context/RefContext';
 
 let hasAnimated = false; // ✅ guard
 
 export default function NavigationIndex() {
-    const { containerRef, contentRef } = useOverlayRefs();
+    const { registerNavRefs, containerRef, contentRef } = useOverlayRefs();
     const pathname = usePathname(); // e.g. "/about"
     const navIndex = useRef<HTMLDivElement>(null);
     const router = useRouter();
@@ -21,35 +21,58 @@ export default function NavigationIndex() {
     const prevHandle = !isFirst && currentIndex > 0 ? navItems[currentIndex - 1].handle : null;
     const isLast = currentIndex === navItems.length - 1;
     const nextHandle = !isLast && currentIndex !== -1 ? navItems[currentIndex + 1].handle : null;
+
+
+    const { lineRef, dotRef } = registerNavRefs(pathname.replace(/^\//, "") ); // safe, deterministic
     
-    function handleOverlayClose()  {
+    function handleOverlayClose(handle)  {
+    
+        event?.preventDefault()
         const tl = gsap.timeline({
             onComplete: () => {
-                router.push("/"); // ✅ client-side navigation
+                router.push(handle); // ✅ client-side navigation
             },
         });
+        console.log(containerRef.current)
+        if (typeof containerRef.current !== "undefined" && containerRef.current.scrollTop !== 0) {
+            console.log('scroll')
+            tl.to(containerRef.current, {
+                scrollTo: { y: 0 },
+                duration: .5,
+                ease: "power2.inOut",
+            });
+        }
+        tl.fromTo(
+        contentRef.current,
+        {opacity: 1},
+        {opacity: 0, duration: .5, ease: "circ.in"},
+        "<")
         tl.fromTo(
         navIndex.current,
         {opacity: 1},
-        {opacity: 0, duration: .5, ease: "power2.out"}
-        )
-        .fromTo(
+        {opacity: 0, duration: .5, ease: "circ.in"},
+        "<")
+        tl.fromTo(
         containerRef.current,
-        { opacity: 1 },
-        { opacity: 0, duration: .5, ease: "power2.in" }
-        )
-        .fromTo(
-        contentRef.current,
-        { opacity: 1 },
-        { opacity: 0 },
-        )
-        .fromTo(
-        containerRef.current,
-        { backdropFilter: "blur(30px)" },
-        { backdropFilter: "blur(0px)", duration: 0.6, ease: "power2.in" },
-        "+=0.1"
-        )
+        { backdropFilter: "blur(15px)" },
+        { backdropFilter: "blur(0px)", duration: .9, ease: "power2.in" },
+        "<")
+        tl.fromTo(
+        lineRef.current,
+        {
+        scaleX: 1,
+        },
+        { scaleX: 0,transformOrigin: 'right center',
+        duration: 2, ease: "back.out"},
+        "")
+        tl.to(
+        dotRef.current,{
+        x: 0,
+        duration: .5,
+        ease: "power2.out",
+        },"<");
         
+   
 
     }
 
@@ -92,7 +115,8 @@ export default function NavigationIndex() {
 
                 <div className="flex flex-col gap-3">
                     {navItems.map((item, index) => (
-                    <Link key={index + 1} href={`/${item.handle}`} className={pathname == ("/" + item.handle) ? "font-normal" : "font-extralight"} >0{index + 1}</Link>
+                    <div  key={index + 1}  onClick={ () => handleOverlayClose(item.handle)}  className={pathname == ("/" + item.handle) ? "font-normal" : "font-extralight"} >0{index + 1}</div>
+                    // <Link key={index + 1} onClick={ () => handleOverlayClose(item.handle)} href={`/${item.handle}`} className={pathname == ("/" + item.handle) ? "font-normal" : "font-extralight"} >0{index + 1}</Link>
                     ))}
                 </div>
                 <div className='align-center'>

@@ -13,7 +13,7 @@ let lastScrollY = 0;
 export function ScrollRestorationManager() {
   const pathname = usePathname();
 
-  const { ringRef, scrollContainer, navRefs} = useOverlayRefs()
+  const { ringRef, scrollContainer, navRefs, containerRef } = useOverlayRefs()
 
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -43,12 +43,20 @@ export function ScrollRestorationManager() {
         window.scrollTo(0, lastScrollY);
         if (pathname == "/contact") {
             const tl = gsap.timeline();
-
-            tl.to(window, {
-                scrollTo: { y: 0 },
-                duration: 2.5, // seconds – increase for slower scroll
-                ease: "power2.inOut",
-            });
+            if (typeof window !== "undefined" && window.scrollY !== 0) {
+                tl.to(window, {
+                  scrollTo: { y: 0 },
+                  duration: 2.5,
+                  ease: "power2.inOut",
+                });
+              }
+            
+            tl.fromTo(
+              containerRef.current,
+              { opacity: 0 },
+              { opacity: 1, duration: 1.5, ease: "power2.out" },
+              ">"
+            )
             tl.to(ringRef.current, {
                 position: "absolute",
                 duration: 0
@@ -72,5 +80,47 @@ export function ScrollRestorationManager() {
     });
   }, [pathname]);
 
+
+  //manages the scroll disablement when overlay is open
+useEffect(() => {
+  const container = containerRef.current;
+  if (!container) return;
+
+  const scrollableChild = container.querySelector('.content') as HTMLElement;
+  if (!scrollableChild) return;
+
+
+  if (scrollableChild) {
+    // Lock global scroll
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+
+    // Enable scroll on the child
+    scrollableChild.style.overflowY = 'auto';
+    scrollableChild.style.webkitOverflowScrolling = 'touch'; // for iOS
+  }  else {
+    // Unlock scroll globally
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+
+    if (scrollableChild) {
+      scrollableChild.style.overflowY = '';
+      scrollableChild.style.webkitOverflowScrolling = '';
+    }
+  }
+
+  return () => {
+    // Reset scroll
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+    if (scrollableChild) {
+      scrollableChild.style.overflowY = '';
+      scrollableChild.style.webkitOverflowScrolling = '';
+    }
+  };
+}, [containerRef, pathname]);
+
+
   return null;
+  
 }

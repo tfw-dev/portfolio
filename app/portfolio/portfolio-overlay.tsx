@@ -35,7 +35,7 @@ export default function PortfolioOverlay({handle}) {
       .fromTo(
         containerRef.current,
         { backdropFilter: "blur(0px)" },
-        { backdropFilter: "blur(30px)", duration: 0.6, ease: "power2.out" },
+        { backdropFilter: "blur(15px)", duration: 0.6, ease: "power2.out" },
         "+=0.1"
       )
       .fromTo(
@@ -48,8 +48,9 @@ export default function PortfolioOverlay({handle}) {
   }, [item]);
 
   return (
-    <div className="overlay fixed w-full min-h-dvh top-0 left-0" ref={containerRef}>
-         <div className="relative overflow-y-scroll h-200">
+    <div className="overlay fixed inset-0 w-full overflow-y-auto" ref={containerRef}>
+      <div className="relative content">
+        <div className="grain"></div>
                <NavigationLink ref={navCopy}
                     key={item.handle}
                     label={item.label}
@@ -60,7 +61,7 @@ export default function PortfolioOverlay({handle}) {
                     dotOffsetDesktop={item.dotOffsetDesktop}
                     reference={navCopy}
                   />
-        <div className="mr-20 px-10 my-0  mt-[230px] text-left" ref={contentRef}>
+        <div className="mr-20 px-10 my-0  relative mt-[35dvh] text-left  md:w-[70dvh]  md:mx-auto md:mt-[50dvh]" ref={contentRef}>
         <section className="flex flex-col gap-8">
           {portfolioProjects.map((item, index) => (
             <PortfolioProject key={index + 1} item={item}></PortfolioProject>

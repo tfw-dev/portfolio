@@ -29,7 +29,7 @@ export default function AboutOverlay({handle}) {
       .fromTo(
         containerRef.current,
         { backdropFilter: "blur(0px)" },
-        { backdropFilter: "blur(30px)", duration: 0.6, ease: "power2.out" },
+        { backdropFilter: "blur(10px)", duration: 0.6, ease: "power2.out" },
         "+=0.1"
       )
       .fromTo(
@@ -42,8 +42,9 @@ export default function AboutOverlay({handle}) {
   }, [item]);
 
   return (
-    <div className="overlay fixed w-full min-h-dvh top-0 left-0" ref={containerRef}>
-      <div className="relative overflow-y-scroll h-200">
+    <div className="overlay fixed inset-0 w-full overflow-y-auto" ref={containerRef}>
+      <div className="relative content">
+        <div className="grain"></div>
          <NavigationLink ref={navCopy}
               key={item.handle}
               label={item.label}
@@ -54,7 +55,7 @@ export default function AboutOverlay({handle}) {
               dotOffsetDesktop={item.dotOffsetDesktop}
               reference={navCopy}
             />
-        <div className="mr-20 px-10 my-0  mt-[250px] text-left" ref={contentRef}>
+        <div className=" mr-20 px-10 my-0 mt-[30dvh] text-left md:mt-[35dvh] md:w-[70dvh]  md:m-auto" ref={contentRef}>
           <section>
             <Image src={headshot}
             width={150}

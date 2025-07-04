@@ -25,6 +25,7 @@
   --text-small-desktop--letter-spacing: 0.13rem;
   --font-rodin-pro: var(--font-rodin-pro);
   --font-along-sans-s2: var(--along-sans);
+  --font-barcode-tfb: var(--barcode-tfb);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -50,23 +51,22 @@ body {
 
 
 .overlay {
-  background-color: rgba(77, 77, 77, 0.1);
+  background-color: rgba(0, 0, 0, 0.2);
   z-index: 2;
 }
 
 
-.overlay::before {
-  position: absolute;
-  top: 0;
+.overlay .grain {
   content: '';
-  width: 100%;
-  height: 100%;
-  z-index: 2;
-  opacity: 12%;
-  background: #000000;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #000;
+  opacity: 0.12;
   filter: url(#noiseFilter);
   pointer-events: none;
 }
+
 
 .overlay.scroll::before {
 
@@ -84,3 +84,16 @@ section {
   margin-bottom: 8em;
 }
 
+
+
+.mask-size {
+  -webkit-mask-image: radial-gradient(circle at top, transparent 93px, black 93px);
+  mask-image: radial-gradient(circle at top, transparent 93px, black 93px);
+}
+
+@media (min-width: 768px) {
+  .mask-size {
+    -webkit-mask-image: radial-gradient(circle at top, transparent 150px, black 150px);
+    mask-image: radial-gradient(circle at top, transparent 150px, black 150px);
+  }
+}

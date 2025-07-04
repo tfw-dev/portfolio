@@ -36,6 +36,12 @@ const rodin = localFont({
   display: 'swap',
 });
 
+const BarcodeTFB = localFont({
+  src: "../public/fonts/BARCODE TFB.ttf",
+  variable: "--barcode-tfb",
+  display: "swap"
+})
+
 const alongSansS2 = localFont({
   src: "../public/fonts/AlongSanss2-Regular.otf",
   variable: '--along-sans',
@@ -54,8 +60,9 @@ export default function RootLayout({
 }>) {
   return ( 
     <html lang="en">
+        <meta property="og:type" content="website" />
       <body
-        className={`${inter.className} ${rodinPro.className} ${rodin.variable} ${alongSansS2.variable}  antialiased `}
+        className={`${inter.className} ${rodinPro.className} ${rodin.variable} ${alongSansS2.variable} ${BarcodeTFB.variable}  antialiased `}
       >
       <header className={`fixed w-full top-8 h-1 z-10 `}>
         <Link className="absolute left-10 " href="/">//</Link>
@@ -69,7 +76,7 @@ export default function RootLayout({
           <filter id='noiseFilter'>
             <feTurbulence 
               type='fractalNoise' 
-              baseFrequency='1.5' 
+              baseFrequency='0.6' 
               stitchTiles='stitch'/>
           </filter>
         </svg>
