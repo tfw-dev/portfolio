@@ -93,7 +93,22 @@ section {
 
 @media (min-width: 768px) {
   .mask-size {
-    -webkit-mask-image: radial-gradient(circle at top, transparent 150px, black 150px);
-    mask-image: radial-gradient(circle at top, transparent 150px, black 150px);
+    -webkit-mask-image: radial-gradient(circle at top, transparent 155px, black 155px);
+    mask-image: radial-gradient(circle at top, transparent 155px, black 155px);
   }
+}
+
+
+
+.inputWrapper::after {
+  content: "";
+  height: 1px;
+  width: 500%;
+  background-color:  var(--color-muted);
+  position: absolute;
+  bottom: 0;
+  left: -200%;
+  right: 0;
+  transform: scale(0.2);
+
 }

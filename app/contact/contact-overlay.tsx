@@ -11,7 +11,7 @@ import { TextPlugin } from "gsap/TextPlugin";
 
 export default function ContactOverlay({handle}) {
 
-   const [form, setForm] = useState({ name: '', email: '', message: '' })
+   const [form, setForm] = useState({ firstName: '', lastName: '', company: '', email: '', message: '' })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -35,7 +35,6 @@ const handleSubmit = async (e: React.FormEvent) => {
     });
 
     if (res.ok) {
-      setForm({ name: '', email: '', message: '' });
       setSubmitted(true);
     } else {
       console.error("Submission failed.");
@@ -84,7 +83,6 @@ const handleSubmit = async (e: React.FormEvent) => {
   console.log(delay)
     if (containerRef.current) {
       const tl = gsap.timeline();
-
       tl.fromTo(
         containerRef.current,
         { backdropFilter: "blur(0px)" },
@@ -112,59 +110,22 @@ const handleSubmit = async (e: React.FormEvent) => {
     }
   }, []);
 
+  useEffect(() => {
+  if (submitted) {
+    const timeout = setTimeout(() => {
+      setForm({ firstName: '', lastName: '', company: '', email: '', message: '' });
+    }, 5000); // clears form after 5s
+
+    return () => clearTimeout(timeout);
+  }
+}, [submitted]);
+
   return (
     <div>
-      
-      <div className="antialiased font-barcode-tfb text-muted text-[52px] absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 " ref={barCodeText} >
+      <div className="antialiased opacity-0 font-barcode-tfb text-muted text-[52px] absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 " ref={barCodeText} >
         Hello
       </div>
-    <div  className={`${ pathname === "/contact" ? "absolute" : "fixed"} opacity-0 overlay scroll top top-1/2 left-0 bot-0 w-full mask-size`} ref={containerRef}>
-          <section className="!mb-90 relative flex flex-col gap-8 z-6 top-70 w-3/4 mx-auto">
-                 {submitted ? (
-              <p className="text-green-600">Thanks! I’ll get back to you soon.</p>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Your name"
-                  value={form.name}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded"
-                  required
-                />
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Your email"
-                  value={form.email}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded"
-                  required
-                />
-                <textarea
-                  name="message"
-                  placeholder="Your message"
-                  value={form.message}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded h-32"
-                  required
-                />
-                <button
-          type="submit"
-          disabled={loading}
-          className={`px-4 py-2 rounded ${
-            loading ? "bg-gray-400 cursor-not-allowed" : "bg-black text-white"
-          }`}
-        >
-          {loading ? "Sending..." : "Send"}
-        </button>
-              </form>
-                )}
-            </section>
-            </div>
-        <div className=" px-10 my-0  mt-[250px] text-left" ref={contentRef}>
-       <NavigationLink ref={navCopy}
+              <NavigationLink ref={navCopy}
               key={item.handle}
               label={item.label}
               handle={item.handle}
@@ -174,7 +135,85 @@ const handleSubmit = async (e: React.FormEvent) => {
               dotOffsetDesktop={item.dotOffsetDesktop}
               reference={navCopy}
             />
+    <div  className={`${ pathname === "/contact" ? "absolute" : "fixed"} opacity-0 overlay scroll top top-1/2 left-0 bot-0 w-full mask-size`} ref={containerRef}>
+    
+          <div className=" px-10 my-0  mt-[250px] text-left w-3/4 max-w-[600px] mx-auto " ref={contentRef}>
+          <section className="!mb-90 relative flex flex-col gap-8 z-6 ">
+                 {submitted ? (
+              <p className="mx-auto relative md:top-[5vh] text-center">Thank you {form.firstName}<br></br><span>I’ll follow up shortly</span></p>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4 relative">
+                <div className="flex justify-between gap-4 w-full">
+                  <div className="inputWrapper relative w-full">
+                    <input
+                      type="text"
+                      name="firstName"
+                      placeholder="First name"
+                      value={form.firstName}
+                      onChange={handleChange}
+                      className="w-full p-2"
+                      required
+                    />
+                  </div>
+                  <div className="inputWrapper relative w-full">
+                    <input
+                      type="text"
+                      name="lastName"
+                      placeholder="Last name"
+                      value={form.lastName}
+                      onChange={handleChange}
+                      className="w-full p-2"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="inputWrapper relative w-full">
+                  <input
+                    type="text"
+                    name="company"
+                    placeholder="Company"
+                    value={form.company}
+                    onChange={handleChange}
+                    className="w-full p-2 d"
+                    required
+                  />
+                </div>
+                <div className="inputWrapper relative w-full">
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Your email"
+                    value={form.email}
+                    onChange={handleChange}
+                    className="w-full p-2 d"
+                    required
+                  />
+                </div>
+                <div className="inputWrapper relative">
+                  <textarea
+                    name="message"
+                    placeholder="Your message"
+                    value={form.message}
+                    onChange={handleChange}
+                    className="relative w-full p-3  h-32"
+                    required
+                  />
+                </div>
+                <button
+          type="submit"
+          disabled={loading}
+          className={`px-5 py-2 rounded ${
+            loading ? "bg-gray-400 cursor-not-allowed" : "bg-black text-white"
+          }`}
+        >
+          {loading ? "Sending..." : "Send"}
+        </button>
+              </form>
+                )}
+            </section>
+  
         </div>
+    </div>
     </div>
   );
 }

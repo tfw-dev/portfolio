@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
 
 export async function POST(req: Request) {
-  const { name, email, message } = await req.json()
+  const { firstName, lastName, company, email, message } = await req.json()
   // DEBUG
 
   const transporter = nodemailer.createTransport({
@@ -18,9 +18,9 @@ export async function POST(req: Request) {
 
   try {
     const info = await transporter.sendMail({
-      from: `"${name}" <${email}>`,
+      from: `"${firstName + " " + lastName}" <${email}>`,
       to: process.env.EMAIL_TO,
-      subject: `New message from ${name}`,
+      subject: `New message from ${firstName + " " + lastName} -  ${company}`,
       text: message,
     })
 

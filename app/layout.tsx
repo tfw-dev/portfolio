@@ -7,6 +7,7 @@ import Ring from "./components/ring"
 import { RefContextProvider } from "@/context/RefContext";
 import { ScrollRestorationManager } from "./scroll-restoration";
 import ScrollContainer from "./scroll-container";
+import { ScrollTriggerProvider } from "@/context/ScrollTriggerContext";
 
 const inter = Inter({
     subsets: ['latin']
@@ -76,15 +77,18 @@ export default function RootLayout({
           <filter id='noiseFilter'>
             <feTurbulence 
               type='fractalNoise' 
-              baseFrequency='0.6' 
+              baseFrequency='0.75' 
               stitchTiles='stitch'/>
           </filter>
         </svg>
         <RefContextProvider>
+        <ScrollTriggerProvider>
+
         <Ring />
         {children}
         <ScrollContainer></ScrollContainer>
         <ScrollRestorationManager></ScrollRestorationManager>
+        </ScrollTriggerProvider>
        </RefContextProvider>
 
       </main>

@@ -21,28 +21,35 @@ export default function PortfolioOverlay({handle}) {
   const dotRef = refs?.dotRef;
   const item = navItems.find(item => item["handle"] == handle)
 
-    const navCopy = useRef(null)
+  const navCopy = useRef(null)
+  const grainRef = useRef(null)
 
   useEffect(() => {
     if (containerRef.current) {
-      const tl = gsap.timeline();
+     const tl = gsap.timeline();
 
-       tl.fromTo(
+      tl.fromTo(
         containerRef.current,
         { opacity: 0 },
-        { opacity: 1, duration: 0.1, ease: "power2.out" }
+        { opacity: 1, duration: 0.2, ease: "sine.in" }
+      )
+      tl.fromTo(
+        grainRef.current,
+        { opacity: 0 },
+        { opacity: .12, duration: 0.2, ease: "sine.in" },
+        "<"
       )
       .fromTo(
         containerRef.current,
         { backdropFilter: "blur(0px)" },
-        { backdropFilter: "blur(15px)", duration: 0.6, ease: "power2.out" },
-        "+=0.1"
+        { backdropFilter: "blur(10px)", duration: 0.6, ease: "sine.in" },
+        "<"
       )
       .fromTo(
         contentRef.current,
-        { opacity: 0 },
-        { opacity: 1 },
-        "+=2"
+        { opacity: 0, filter: "blur(0.1px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.6 , ease: "sine.in"},
+        "+=1.5"
       );
     }
   }, [item]);

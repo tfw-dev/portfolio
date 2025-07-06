@@ -15,6 +15,7 @@ export default function AboutOverlay({handle}) {
     const item = navItems.find(item => item["handle"] == handle)
 
     const navCopy = useRef(null)
+    const grainRef = useRef(null)
 
   useEffect(() => {
 
@@ -24,18 +25,24 @@ export default function AboutOverlay({handle}) {
       tl.fromTo(
         containerRef.current,
         { opacity: 0 },
-        { opacity: 1, duration: 0.1, ease: "power2.out" }
+        { opacity: 1, duration: 0.2, ease: "sine.in" }
+      )
+      tl.fromTo(
+        grainRef.current,
+        { opacity: 0 },
+        { opacity: .12, duration: 0.2, ease: "sine.in" },
+        "<"
       )
       .fromTo(
         containerRef.current,
         { backdropFilter: "blur(0px)" },
-        { backdropFilter: "blur(10px)", duration: 0.6, ease: "power2.out" },
-        "+=0.1"
+        { backdropFilter: "blur(10px)", duration: 0.6, ease: "sine.in" },
+        "<"
       )
       .fromTo(
         contentRef.current,
-        { opacity: 0 },
-        { opacity: 1 },
+        { opacity: 0, filter: "blur(0.1px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.6 , ease: "sine.in"},
         "+=1.5"
       );
     }
@@ -44,7 +51,7 @@ export default function AboutOverlay({handle}) {
   return (
     <div className="overlay fixed inset-0 w-full overflow-y-auto" ref={containerRef}>
       <div className="relative content">
-        <div className="grain"></div>
+        <div className="grain" ref={grainRef}></div>
          <NavigationLink ref={navCopy}
               key={item.handle}
               label={item.label}

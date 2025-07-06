@@ -25,15 +25,18 @@ export default function NavigationIndex() {
 
     const { lineRef, dotRef } = registerNavRefs(pathname.replace(/^\//, "") ); // safe, deterministic
     
+
     function handleOverlayClose(handle)  {
     
+        const grainLayer = containerRef.current.querySelector('.grain')
+
+
         event?.preventDefault()
         const tl = gsap.timeline({
             onComplete: () => {
                 router.push(handle); // ✅ client-side navigation
             },
         });
-        console.log(containerRef.current)
         if (typeof containerRef.current !== "undefined" && containerRef.current.scrollTop !== 0) {
             console.log('scroll')
             tl.to(containerRef.current, {
@@ -56,6 +59,10 @@ export default function NavigationIndex() {
         containerRef.current,
         { backdropFilter: "blur(15px)" },
         { backdropFilter: "blur(0px)", duration: .9, ease: "power2.in" },
+        "<")
+        tl.to(
+        grainLayer,
+        {opacity: 0, duration: .5, ease: "circ.in"},
         "<")
         tl.fromTo(
         lineRef.current,

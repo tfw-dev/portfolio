@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation'
 import gsap from 'gsap';
 import ScrollToPlugin from 'gsap/ScrollToPlugin';
 import { useOverlayRefs } from "@/context/RefContext";
+import { useScrollTriggerContext } from "@/context/ScrollTriggerContext";
+
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -14,6 +16,7 @@ export function ScrollRestorationManager() {
   const pathname = usePathname();
 
   const { ringRef, scrollContainer, navRefs, containerRef } = useOverlayRefs()
+ const { getTrigger, refreshAllTriggers } = useScrollTriggerContext();
 
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -49,14 +52,7 @@ export function ScrollRestorationManager() {
                   duration: 2.5,
                   ease: "power2.inOut",
                 });
-              }
-            
-            tl.fromTo(
-              containerRef.current,
-              { opacity: 0 },
-              { opacity: 1, duration: 1.5, ease: "power2.out" },
-              ">"
-            )
+            }
             tl.to(ringRef.current, {
                 position: "absolute",
                 duration: 0
@@ -72,10 +68,33 @@ export function ScrollRestorationManager() {
                 }
             });
             });
+            tl.fromTo(
+              containerRef.current,
+              { opacity: 0 },
+              { opacity: 1, duration: 1, ease: "power2.out" },
+              ">"
+            )
 
         } else {
             ringRef.current.style.position = "fixed";
             scrollContainer.current.style.display = "block";
+            console.log("reset styling")
+              requestAnimationFrame(() => {
+                    // 🔥 refresh all triggers from context (this calls ScrollTrigger.refresh() internally)
+                    const trigger1 = getTrigger("step1-scroll");
+                    const trigger2 = getTrigger("step2-scroll");
+                    const trigger3 = getTrigger("step3-scroll");
+                    trigger1?.enable()
+                    trigger2?.enable()
+                    trigger3?.enable();
+                    console.log("trigger1", trigger1);
+                    console.log("trigger2", trigger2);
+                    console.log("trigger3", trigger3);
+                                        refreshAllTriggers();
+
+                });
+
+
         }
     });
   }, [pathname]);
